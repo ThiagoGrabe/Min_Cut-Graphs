@@ -15,6 +15,7 @@ class Graph:
             self.vertex = self.load[0][0]
             self.edges = self.load[0][1]
             self.initial_config = self.load[1:]
+            self.vertex_list = [i for i in range(self.vertex)]
 
             # Initialize graph
             self.graph = [[0 for x in range(self.vertex)] for y in range(self.vertex)]
@@ -27,12 +28,10 @@ class Graph:
                 esquerda.append(line[0])
                 direita.append(line[1])
             r = self.getUnique(esquerda, direita)
-            self.source, self.sink = r[0][0], r[1][-1]
-            # self.sink = self.getUnique(direita)[0]
+            self.source, self.sink = r[0][0], r[1][1:]
 
             self.graph_ = [i[:] for i in self.graph]
 
-            self.vertex_list = [i for i in range(self.vertex)]
             # self.source = 0
             # self.sink = [i for i in range(self.vertex)]
             # self.sink.remove(self.source)

@@ -57,16 +57,22 @@ def MinCut(graph, source, terminal, search):
 
 
 def corteST(results, world):
+    val = float('inf')
+    for idx, answer in enumerate(results):
+        if answer[2] < val and answer[0] != []:
+            val = answer[2]
+            id_ = idx
+    return results[id_]
 
-    for answer in results:
-        L = list(dict.fromkeys(answer[0]+answer[1]))
-        a = world.vertex_list
-        b = answer[2]
-        res = all(elem in L for elem in world.vertex_list)
-        if res:
-            return answer
-        else:
-            continue
+    # for answer in results:
+    #     L = list(dict.fromkeys(answer[0]+answer[1]))
+    #     a = world.vertex_list
+    #     b = answer[2]
+    #     res = all(elem in L for elem in world.vertex_list)
+    #     if res:
+    #         return answer
+    #     else:
+    #         continue
 
         # ans = answer
         # L = [False] * world.vertex
@@ -88,25 +94,25 @@ def main():
     try:
         file = sys.argv[1]
     except:
-        file = str('11.in')
+        file = str('4.in')
     world = Graph(str(file))
     search = BFS()
     source = world.source
     terminal = world.sink
     # world.source_sink()
     # for source in world.source_:
-    # for sink in terminal:
-    print('Source: ', source, 'Sink: ', world.sink)
-    print('----------------------------------')
+    for sink in terminal:
+        print('Source: ', source, 'Sink: ', sink)
+        print('----------------------------------')
 
     # source = 0
     # terminal = 1
-    answer = MinCut(world, source, world.sink, search)
+        answer = MinCut(world, source, sink, search)
 
-    # results.append(answer)
-    # world.reset()
-    # world.source_sink()
-    # final_result = corteST(results, world)
+        results.append(answer)
+        world.reset()
+    final_result = corteST(results, world)
+    # print(final_result)
     # if final_result is None:
     #     for weight in results:
     #         idx, val = 0, float('inf')
@@ -117,15 +123,15 @@ def main():
     # print(results)
     # S = set(list(dict.fromkeys(final_result[0])))
     # S_ = set(list(dict.fromkeys(final_result[1])))
-    S = answer[0]
-    S_ = answer[1]
+    S = final_result[0]
+    S_ = final_result[1]
     # t = S - S_
 
     # print('Qty Vertices: ', len(S))
     # print('Conjunto S:', S)
     print('Qty Vertices: ', len(list(dict.fromkeys(S_))))
     print('Conjunto S:', list(dict.fromkeys(S_)))
-    print('Sum cut weights: ', answer[-1])
+    print('Sum cut weights: ', final_result[-1])
     print('Time: ', time.time() - init)
 
 

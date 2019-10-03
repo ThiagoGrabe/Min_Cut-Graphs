@@ -30,17 +30,13 @@ def MinCut(graph, source, terminal, search):
             graph.graph[u][v] -= path
             graph.graph[v][u] += path
             v = parent[v]
-    # print(graph.graph)
-    # print(graph.graph_)
     j_list = list()
     i_list = list()
     for i in range(graph.row):
         for j in range(graph.column):
             if graph.graph[i][j] == 0 and graph.graph_[i][j] > 0:
-                # getNeibours(graph, i, j)
                 i_list.append(i)
                 j_list.append(j)
-
     # print(i_list, '_', j_list)
 
     # print("S: ", (i_list))
@@ -52,9 +48,6 @@ def MinCut(graph, source, terminal, search):
 
     return i_list, j_list, maxFlow
 
-# def getNeibours(graph, i, j):
-
-
 
 def corteST(results, world):
     val = float('inf')
@@ -64,29 +57,6 @@ def corteST(results, world):
             id_ = idx
     return results[id_]
 
-    # for answer in results:
-    #     L = list(dict.fromkeys(answer[0]+answer[1]))
-    #     a = world.vertex_list
-    #     b = answer[2]
-    #     res = all(elem in L for elem in world.vertex_list)
-    #     if res:
-    #         return answer
-    #     else:
-    #         continue
-
-        # ans = answer
-        # L = [False] * world.vertex
-    #     for element in answer[0]:
-    #         if element in world.vertex_list:
-    #             L[element] = True
-    #         for element_ in answer[1]:
-    #             if element in world.vertex_list:
-    #                 L[element_] = True
-    #
-    #     if all(element for element in L):
-    #         break
-    # return ans
-
 
 def main():
     results = []
@@ -94,43 +64,18 @@ def main():
     try:
         file = sys.argv[1]
     except:
-        file = str('4.in')
+        file = str('11.in')
     world = Graph(str(file))
-    search = BFS()
-    source = world.source
-    terminal = world.sink
-    # world.source_sink()
-    # for source in world.source_:
-    for sink in terminal:
-        print('Source: ', source, 'Sink: ', sink)
-        print('----------------------------------')
-
-    # source = 0
-    # terminal = 1
-        answer = MinCut(world, source, sink, search)
-
+    for sink in world.sink:
+        answer = MinCut(world, world.source, sink, BFS())
         results.append(answer)
         world.reset()
     final_result = corteST(results, world)
-    # print(final_result)
-    # if final_result is None:
-    #     for weight in results:
-    #         idx, val = 0, float('inf')
-    #         if weight[2] < val:
-    #             final_result = weight
-    #             val = weight[2]
-    #         idx += 1
-    # print(results)
-    # S = set(list(dict.fromkeys(final_result[0])))
-    # S_ = set(list(dict.fromkeys(final_result[1])))
     S = final_result[0]
     S_ = final_result[1]
-    # t = S - S_
-
-    # print('Qty Vertices: ', len(S))
-    # print('Conjunto S:', S)
     print('Qty Vertices: ', len(list(dict.fromkeys(S_))))
     print('Conjunto S:', list(dict.fromkeys(S_)))
+    print('Conjunt -S ', list(dict.fromkeys(S)))
     print('Sum cut weights: ', final_result[-1])
     print('Time: ', time.time() - init)
 

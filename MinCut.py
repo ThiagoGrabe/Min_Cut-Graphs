@@ -1,5 +1,6 @@
 import sys
 import time
+import os
 
 from BFS import BFS
 from Environment import Graph
@@ -30,27 +31,19 @@ def MinCut(graph, source, terminal, search):
             graph.graph[u][v] -= path
             graph.graph[v][u] += path
             v = parent[v]
-    j_list = list()
-    i_list = list()
+    j_list = []
+    i_list = []
     for i in range(graph.row):
         for j in range(graph.column):
-            if graph.graph[i][j] == 0 and graph.graph_[i][j] > 0:
+            if graph.graph_[i][j] > 0 and graph.graph[i][j] == 0:
                 i_list.append(i)
                 j_list.append(j)
-    # print(i_list, '_', j_list)
-
-    # print("S: ", (i_list))
-    # print("S': ", (j_list))
-    # print("S: ", list(dict.fromkeys(i_list)))
-    # print("S': ", list(dict.fromkeys(j_list)))
-    # print('Max Flow: ', maxFlow)
-    # print('------------------')
-
     return i_list, j_list, maxFlow
 
 
 def corteST(results, world):
     val = float('inf')
+    id_ = 0
     for idx, answer in enumerate(results):
         if answer[2] < val and answer[0] != []:
             val = answer[2]
@@ -58,26 +51,45 @@ def corteST(results, world):
     return results[id_]
 
 
+def write_output(length, set, max_flow, file):
+    set_ = ' '.join(map(str, set))
+    with open(str(file), 'w') as f:
+        f.write(str(length)+' \n')
+        f.write(str(set_) + ' \n')
+        f.write(str(max_flow) +' \n')
+        f.write('\n')
+    f.close()
+
+
 def main():
-    results = []
     init = time.time()
+    global results
     try:
-        file = sys.argv[1]
+        input = sys.argv[1]
+        output = sys.argv[2]
     except:
-        file = str('11.in')
-    world = Graph(str(file))
+        input = str('9.in')
+        output = os.getcwd()+(str('/out/output_')+input)
+    world = Graph(str(input))
     for sink in world.sink:
         answer = MinCut(world, world.source, sink, BFS())
         results.append(answer)
         world.reset()
     final_result = corteST(results, world)
-    S = final_result[0]
-    S_ = final_result[1]
-    print('Qty Vertices: ', len(list(dict.fromkeys(S_))))
-    print('Conjunto S:', list(dict.fromkeys(S_)))
-    print('Conjunt -S ', list(dict.fromkeys(S)))
-    print('Sum cut weights: ', final_result[-1])
-    print('Time: ', time.time() - init)
+    set_S = set(dict.fromkeys(final_result[0]))
+    set_comp_S = set(dict.fromkeys(final_result[1]))
+    # print('Total de vertices: ', world.vertex)
+    # print('Faz sentido: ', len(world.vertex_list) - len(set_comp_S))
+    # print('---------------------')
+    comprimento_s = len(set_comp_S)
+    print('Qty Vertices: ', comprimento_s)
+    # print('Conjunto S:', set_S)
+    print('Conjunt -S ', set_comp_S)
+    print('Sum cut weights: ', final_result[2])
+    # print(set(dict.fromkeys(final_result[3])))
+    instance_time = time.time() - init
+    print('Time: ', instance_time)
+    # write_output(comprimento_s, list(set_comp_S), final_result[2], output)
 
 
 if __name__ == '__main__':

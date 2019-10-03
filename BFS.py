@@ -1,16 +1,18 @@
-def bfs(graph, source, terminal, family):
+class BFS:
 
-    seen = [False] * len(graph)
-    fifo = list()
-    fifo.append(source)
-    seen[source] = True
+    def bfs(self, graph, source, terminal, family):
 
-    while fifo:
-        u = fifo.pop(0)
+        seen = [False] * len(graph)
+        fifo = []
+        fifo.append(source)
+        seen[source] = True
 
-        for idx, value in enumerate(graph[u]):
-            if seen[idx] == False and value > 0:
-                fifo.append(idx)
-                seen[idx] = True
-                family[idx] = u
-    return True if seen[terminal] else False
+        while fifo:
+            u = fifo.pop(0)
+
+            for idx, value in enumerate(graph[u]):
+                if value > 0 and seen[idx] == False:
+                    fifo.append(idx)
+                    seen[idx] = True
+                    family[idx] = u
+        return True if seen[terminal] else False

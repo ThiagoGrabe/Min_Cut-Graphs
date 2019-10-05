@@ -1,6 +1,4 @@
 import sys
-import time
-import os
 
 from BFS import BFS
 from Environment import Graph
@@ -9,24 +7,25 @@ from Environment import Graph
 results = []
 
 
-def MinCut(graph, source, terminal, search):
+def MinCut(graph, s, terminal, search):
     global results
     parent = [-1] * graph.row
 
     maxFlow = 0
 
-    while search.bfs(graph.graph, source, terminal, parent):
+    while search.bfs(graph.graph, s, terminal, parent):
         t = terminal
         path = float('inf')
 
-        while t != source:
-            path = min(path, graph.graph[parent[t]][t])
+        while t != s:
+            t_ = parent[t]
+            path = min(path, graph.graph[t_][t])
             t = parent[t]
 
         maxFlow += path
         v = terminal
 
-        while v != source:
+        while v != s:
             u = parent[v]
             graph.graph[u][v] -= path
             graph.graph[v][u] += path
@@ -62,34 +61,18 @@ def write_output(length, set, max_flow, file):
 
 
 def main():
-    init = time.time()
     global results
-    try:
-        input = sys.argv[1]
-        output = sys.argv[2]
-    except:
-        input = str('9.in')
-        output = os.getcwd()+(str('/out/output_')+input)
+    input = sys.argv[1]
+    output = sys.argv[2]
     world = Graph(str(input))
     for sink in world.sink:
         answer = MinCut(world, world.source, sink, BFS())
         results.append(answer)
         world.reset()
     final_result = corteST(results, world)
-    set_S = set(dict.fromkeys(final_result[0]))
     set_comp_S = set(dict.fromkeys(final_result[1]))
-    # print('Total de vertices: ', world.vertex)
-    # print('Faz sentido: ', len(world.vertex_list) - len(set_comp_S))
-    # print('---------------------')
     comprimento_s = len(set_comp_S)
-    print('Qty Vertices: ', comprimento_s)
-    # print('Conjunto S:', set_S)
-    print('Conjunt -S ', set_comp_S)
-    print('Sum cut weights: ', final_result[2])
-    # print(set(dict.fromkeys(final_result[3])))
-    instance_time = time.time() - init
-    print('Time: ', instance_time)
-    # write_output(comprimento_s, list(set_comp_S), final_result[2], output)
+    write_output(comprimento_s, list(set_comp_S), final_result[2], output)
 
 
 if __name__ == '__main__':

@@ -8,11 +8,14 @@ class BFS:
         seen[source] = True
 
         while fifo:
-            u = fifo.pop(0)
+            vertex = fifo.pop(0)
 
-            for idx, value in enumerate(graph[u]):
+            for idx, value in enumerate(graph[vertex]):
                 if value > 0 and seen[idx] == False:
                     fifo.append(idx)
                     seen[idx] = True
-                    family[idx] = u
-        return True if seen[terminal] else False
+                    family[idx] = vertex
+        if seen[terminal]:
+            return True
+        else:
+            return False

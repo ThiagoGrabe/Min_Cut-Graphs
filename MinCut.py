@@ -1,5 +1,4 @@
 import sys
-
 from BFS import BFS
 from Environment import Graph
 
@@ -16,7 +15,6 @@ def MinCut(graph, s, terminal, search):
     while search.bfs(graph.graph, s, terminal, parent):
         t = terminal
         path = float('inf')
-
         while t != s:
             t_ = parent[t]
             path = min(path, graph.graph[t_][t])
@@ -40,7 +38,7 @@ def MinCut(graph, s, terminal, search):
     return i_list, j_list, maxFlow
 
 
-def corteST(results, world):
+def corteST(results):
     val = float('inf')
     id_ = 0
     for idx, answer in enumerate(results):
@@ -50,9 +48,20 @@ def corteST(results, world):
     return results[id_]
 
 
+def getSet(final_result, graph):
+    list_of_v = []
+    for i in range(graph.row):
+        val = 0
+        for j in range(graph.column):
+            val += graph.graph_[i][j]
+        if val == final_result[2]:
+            list_of_v.append(i)
+    return list_of_v
+
+
 def write_output(length, set, max_flow, file):
     set_ = ' '.join(map(str, set))
-    with open(str(file), 'w') as f:
+    with open(str(file), 'a') as f:
         f.write(str(length)+' \n')
         f.write(str(set_) + ' \n')
         f.write(str(max_flow) +' \n')
@@ -69,10 +78,12 @@ def main():
         answer = MinCut(world, world.source, sink, BFS())
         results.append(answer)
         world.reset()
-    final_result = corteST(results, world)
-    set_comp_S = set(dict.fromkeys(final_result[1]))
-    comprimento_s = len(set_comp_S)
-    write_output(comprimento_s, list(set_comp_S), final_result[2], output)
+    final_result = corteST(results)
+    vs = getSet(final_result, world)
+    if len(vs) == 0 or len(vs) == world.vertex:
+      vs = set(dict.fromkeys(final_result[1]))
+    comprimento_s = len(vs)
+    write_output(comprimento_s, vs, final_result[2], output)
 
 
 if __name__ == '__main__':

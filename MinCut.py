@@ -61,7 +61,7 @@ def getSet(final_result, graph):
 
 def write_output(length, set, max_flow, file):
     set_ = ' '.join(map(str, set))
-    with open(str(file), 'a') as f:
+    with open(str(file), 'w') as f:
         f.write(str(length)+' \n')
         f.write(str(set_) + ' \n')
         f.write(str(max_flow) +' \n')
